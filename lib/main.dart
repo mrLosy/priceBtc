@@ -1,70 +1,75 @@
-
 import 'package:flutter/material.dart';
 import 'binance.dart';
+// import 'package:flutter/services.dart';
 
-void main() => runApp(
-     MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home:  Scaffold(
-            appBar:  AppBar(),
-            body: const NewsBoxFavourit()
-        )
-    )
-);
+void main() {
+  runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(body: NewsBoxFavourit())));
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlay.bottom);
+
+}
 
 class NewsBoxFavourit extends StatefulWidget {
-
-  const NewsBoxFavourit({Key? key}) :super(key: key);
+  const NewsBoxFavourit({Key? key}) : super(key: key);
 
   @override
   createState() => NewsBoxFavouritState();
 }
 
 class NewsBoxFavouritState extends State<NewsBoxFavourit> {
+  late String priceToken = "Tap to button to get the price";
 
-  late String priceToken = "";
-  
-  
   NewsBoxFavouritState();
 
-  void pressButton() async
-  {
-    List<BinanceElem> testlist = await  Binance().fetchJsonBinance();
+  void pressButton() async {
+    List<BinanceElem> testlist = await Binance().fetchJsonBinance();
 
-    for (var element in testlist)
-    { 
-      if (element.symbol == "BTCUSDT")
-      {
+    for (var element in testlist) {
+      if (element.symbol == "BTCUSDT") {
         setState(() {
-            priceToken = element.lastPrice;
+          priceToken =
+              element.lastPrice.substring(0, element.lastPrice.indexOf('.')) +
+                  ' USDT';
         });
       }
     }
   }
 
-  @override 
-  Widget build(BuildContext context){
-    return Center(
-      child: SizedBox(
-        height: 600,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          const Text ('Click the button to find out the price BTC/USDT', textAlign: TextAlign.center),
-          ElevatedButton(
-            onPressed: pressButton,
-            child: Text ('Price BTC/USDT $priceToken', textAlign: TextAlign.center,)
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Colors.green,
+        child: Center(
+          child: SizedBox(
+            height: 600,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(priceToken,
+                    style: const TextStyle(color: Colors.white, fontSize: 30.0),
+                    textAlign: TextAlign.center),
+                SizedBox(
+                  height: 30,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: const Color(0xFF3DFFAD),
+                      ),
+                      onPressed: pressButton,
+                      child: const Text(
+                        'Prices BTC/USDT',
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center,
+                      )),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
 
-
 // class NewsBox extends StatelessWidget {
-
 
 //  NewsBox();
 
@@ -84,10 +89,6 @@ class NewsBoxFavouritState extends State<NewsBoxFavourit> {
 //     );
 //   }
 // }
-
-
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
